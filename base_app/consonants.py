@@ -43,6 +43,13 @@ class SpaceTopics:
         ("meteorites", "Meteorites"),
         ("space_colonization", "Space Colonization"),
     ]
+    
+    @classmethod
+    def get_space_topic_label_by_topic_slug(cls, topic_slug: str):
+        for slug, label in cls.__SPACE_TOPICS:
+            if slug == topic_slug:
+                return label
+        return None
 
     @classmethod
     def get_space_topics(cls):
@@ -63,6 +70,10 @@ class SourceTypes:
         {"id": "pretrained_pdf_files", "owner": "bujji", "name": "Pretrained PDF Files"}
     ]
 
+    @classmethod
+    def get_raw_sources(cls) -> Dict[str, List[Dict[str, str]]]:
+        return cls.__SOURCES
+            
     @classmethod
     def get_sources(cls) -> Dict[str, List[Dict[str, str]]]:
         grouped_sources = {}
