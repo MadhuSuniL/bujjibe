@@ -27,7 +27,7 @@ class LargeLanguageModelSourceResponse(BaseSourceResponse):
                 (
                     "system", 
                     """
-                    You are a helpful assistant for answering questions about '{topic}' topic only.
+                    Your name is Bujji. You are a helpful assistant for answering questions about '{topic}' topic only.
                     Please provide the most accurate response based on the question.
                     if you do not know the answer, please say "I do not know".
                     if user asked unrelated topic question then explain to user that currently you can discuss with current topic only.

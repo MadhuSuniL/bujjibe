@@ -1,7 +1,7 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.messages import trim_messages, AIMessage, HumanMessage
-from uuid import UUID
+from uuid import UUID, uuid4  # Import uuid4 for generating random UUIDs
 from collections import OrderedDict
 
 class BaseChatBotAsyncJsonWebsocketConsumer(AsyncJsonWebsocketConsumer):
@@ -32,7 +32,6 @@ class BaseChatBotAsyncJsonWebsocketConsumer(AsyncJsonWebsocketConsumer):
             cls.__sessions[session_id] = []
         return cls.trim_messages(cls.__sessions.get(session_id), model)
 
-
     @classmethod
     async def add_new_message_session(cls, message, session_id, is_ai_message = False):
         if is_ai_message:
@@ -40,9 +39,7 @@ class BaseChatBotAsyncJsonWebsocketConsumer(AsyncJsonWebsocketConsumer):
         else:
             message = HumanMessage(content=message)
         cls.get_session_messages(session_id).append(message)
-        
-
-
+    
     @classmethod
     def trim_messages(cls, session, model):
         # trimmer=trim_messages(
@@ -59,5 +56,8 @@ class BaseChatBotAsyncJsonWebsocketConsumer(AsyncJsonWebsocketConsumer):
     async def send_msg_and_close(self, msg=''):
         await self.send_json({'detail': msg})
         await self.close()
-    
-    
+
+    @classmethod
+    async def generate_random_id(cls):
+        # Generates a random UUID and returns it as a string
+        return str(uuid4())

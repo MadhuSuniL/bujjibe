@@ -2,7 +2,7 @@ from typing import Final, List, Dict, Tuple
 
 class SpaceTopics:
     __SPACE_TOPICS : Final = [
-        (None, "Everything About Space"),
+        ('all', "Everything About Space"),
         ("galaxies", "Galaxies"),
         ("planets", "Planets"),
         ("stars", "Stars"),

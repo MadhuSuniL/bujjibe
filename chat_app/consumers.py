@@ -12,11 +12,17 @@ class ChatBotConsumer(BaseChatBotAsyncJsonWebsocketConsumer):
 
     async def connect(self):
         if await self.user_connect():
-            await self.send_json({"response": self.user.username})
+            pass
+            # await self.chat_bot_response({
+            #                               "query" : "Hi",
+            #                               "topic" : None,
+            #                               "model" : "gemma2-9b-it",
+            #                               })
 
 
-    # @consumer_method_exception_handler
+    @consumer_method_exception_handler
     async def receive_json(self, content, **kwargs):
+        print(content)
         await self.chat_bot_response(content)
 
 
@@ -24,11 +30,12 @@ class ChatBotConsumer(BaseChatBotAsyncJsonWebsocketConsumer):
     async def chat_bot_response(self, query):
         self.source_response = LargeLanguageModelSourceResponse(**query, user = self.user.username)
         await BaseChatBotAsyncJsonWebsocketConsumer.add_new_message_session(query["query"], self.user.username)
-        response_generator : Generator = self.source_response.get_response()
+        response_generator : Generator | str = self.source_response.get_response()
+        uuid : str = await BaseChatBotAsyncJsonWebsocketConsumer.generate_random_id()
         if isinstance(response_generator, str):
             await self.send_json({
-                "response": response_generator,
-                "user" : self.user.username,
+                "id" : uuid,
+                "content": response_generator,
                 **query
             })
             await BaseChatBotAsyncJsonWebsocketConsumer.add_new_message_session(response_generator, self.user.username, True)
@@ -38,14 +45,16 @@ class ChatBotConsumer(BaseChatBotAsyncJsonWebsocketConsumer):
     async def stream_response(self, response_generator : Generator, query):
         full_message = ""
         await self.send_json({
-                "response": '<start>',
+                "id" : uuid,
+                "content": '<start>',
                 "user" : self.user.username,
                 **query
             })
         
         for response in response_generator:
             await self.send_json({
-                "response": response,
+                "id" : uuid,
+                "content": response,
                 "user" : self.user.username,
                 **query
             })
@@ -53,7 +62,8 @@ class ChatBotConsumer(BaseChatBotAsyncJsonWebsocketConsumer):
         await BaseChatBotAsyncJsonWebsocketConsumer.add_new_message_session(full_message, self.user.username, is_ai_message=True)    
 
         await self.send_json({
-                "response": "<end>",
+                "id" : uuid,
+                "content": "<end>",
                 "user" : self.user.username,
                 **query
             })
