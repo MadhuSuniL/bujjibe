@@ -40,9 +40,9 @@ class ChatBotConsumer(BaseChatBotAsyncJsonWebsocketConsumer):
             })
             await BaseChatBotAsyncJsonWebsocketConsumer.add_new_message_session(response_generator, self.user.username, True)
         else:
-            await self.stream_response(response_generator, query)
+            await self.stream_response(response_generator, query, uuid)
     
-    async def stream_response(self, response_generator : Generator, query):
+    async def stream_response(self, response_generator : Generator, query, uuid):
         full_message = ""
         await self.send_json({
                 "id" : uuid,

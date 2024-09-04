@@ -57,18 +57,17 @@ class LargeLanguageModelSourceResponse(BaseSourceResponse):
         
         config={"configurable":{"session_id":self.user}, "topic" : self.get_topic_label(self.topic)}
         human_message = HumanMessage(content=self.query or "Hi!")
-        # print(f"{human_message=}")
         
-        # response = self.chain.stream({
-        #     "messages" : [human_message], 
-        #     "topic" : self.get_topic_label(self.topic),
-        # })
-        response=self.chain.invoke(
-            {
-            "messages":self.get_messages(self.user) + [human_message],
-            "topic": self.get_topic_label(self.topic),
-            }
-        )
+        response = self.chain.stream({
+            "messages" : self.get_messages(self.user) + [human_message], 
+            "topic" : self.get_topic_label(self.topic),
+        })
+        # response=self.chain.invoke(
+        #     {
+        #     "messages":self.get_messages(self.user) + [human_message],
+        #     "topic": self.get_topic_label(self.topic),
+        #     }
+        # )
         return response
 
 
