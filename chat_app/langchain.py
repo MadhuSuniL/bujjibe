@@ -31,6 +31,7 @@ class LargeLanguageModelSourceResponse(BaseSourceResponse):
                     Please provide the most accurate response based on the question.
                     if you do not know the answer, please say "I do not know".
                     if user asked unrelated topic question then explain to user that currently you can discuss with current topic only.
+                    currently you are using {model} llm model.
                     """                 
                 ),
                 MessagesPlaceholder(variable_name="messages"),
@@ -61,6 +62,7 @@ class LargeLanguageModelSourceResponse(BaseSourceResponse):
         response = self.chain.stream({
             "messages" : self.get_messages(self.user) + [human_message], 
             "topic" : self.get_topic_label(self.topic),
+            "model" : self.model,
         })
         # response=self.chain.invoke(
         #     {
@@ -70,13 +72,33 @@ class LargeLanguageModelSourceResponse(BaseSourceResponse):
         # )
         return response
 
+class WebSourceResponse(BaseSourceResponse):
+    
+    def __init__(self, query:str, topic:str, choice:str, user:str, **kwargs):
+        self.query = query
+        self.topic = topic
+        self.choice = choice
+        self.user = user
+        
+     
+    
+    def get_response(self):
+        for word in "Web Source Response Not Implemented Yet":
+            yield word
+        
+    
 
 
 class PretrainedPdfFileSourceResponse(BaseSourceResponse):
     
-
-    def get_response(self, query):
-        pass
+    def __init__(self, query:str, topic:str, user:str, **kwargs):
+        self.query = query
+        self.topic = topic
+        self.user = user
+     
+    def get_response(self):
+        for word in "Pretrained Pdf File Source Response Not Implemented Yet":
+            yield word
         
         
 
