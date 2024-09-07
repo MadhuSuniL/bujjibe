@@ -70,3 +70,16 @@ Once you have installed the required dependencies and Redis:
    ```bash
    python manage.py runserver
    ```
+
+### WebSocket URL for Real-Time Chat
+
+The WebSocket connection for real-time chat can be established using the following WebSocket URL:
+
+```bash
+ws://localhost:8000/ws/chat?token={{token}}
+```
+
+- **token**: Replace `{{token}}` with a valid JWT (JSON Web Token) or session token obtained after user authentication.
+- This token is required to authenticate the user and establish a secure WebSocket connection.
+
+This WebSocket endpoint allows users to engage in real-time chat within the application.
